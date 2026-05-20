@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const name = decodeURIComponent(slug).toUpperCase();
+  const name = slug.toUpperCase();
   const db = getDb();
 
   // Aggregate stats
