@@ -14,7 +14,7 @@ A locally-run Next.js application that:
 ## Tech Stack
 
 | Layer     | Technology                                   |
-|-----------|----------------------------------------------|
+| --------- | -------------------------------------------- |
 | Framework | Next.js 16 (App Router)                      |
 | Language  | TypeScript                                   |
 | Styling   | Tailwind CSS 4                               |
@@ -125,8 +125,8 @@ State machine approach:
 
 **Edge cases to handle:**
 
-- Weight-priced items: `2.265 kg @ $5.49/kg` line appears *between* an item's name and price — the item name is the line
-  *before* this, and the price is the line *after*. Actually re-reading: the item line itself shows the total price. The
+- Weight-priced items: `2.265 kg @ $5.49/kg` line appears _between_ an item's name and price — the item name is the line
+  _before_ this, and the price is the line _after_. Actually re-reading: the item line itself shows the total price. The
   `2.265 kg @ $5.49/kg` line is the weight detail, inserted before the next item.
 - Items with `SALE` and/or `H` suffix flags
 - Multiple items of the same name in one receipt

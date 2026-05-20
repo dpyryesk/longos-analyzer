@@ -34,9 +34,7 @@ export async function POST() {
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
 
-    const getReceipt = db.prepare(
-      `SELECT id FROM receipts WHERE inv_number = ?`
-    );
+    const getReceipt = db.prepare(`SELECT id FROM receipts WHERE inv_number = ?`);
 
     let added = 0;
     let skipped = 0;
@@ -48,11 +46,15 @@ export async function POST() {
         console.log(`[sync] parsing email messageId=${email.messageId}`);
         const parsed = parseReceipt(email.plainText);
         if (!parsed) {
-          console.log(`[sync] messageId=${email.messageId}: parse returned null — incrementing failed`);
+          console.log(
+            `[sync] messageId=${email.messageId}: parse returned null — incrementing failed`
+          );
           failed++;
           continue;
         }
-        console.log(`[sync] messageId=${email.messageId}: parsed inv#${parsed.invNumber} with ${parsed.items.length} item(s)`);
+        console.log(
+          `[sync] messageId=${email.messageId}: parsed inv#${parsed.invNumber} with ${parsed.items.length} item(s)`
+        );
 
         const result = insertReceipt.run(
           parsed.invNumber,
@@ -77,7 +79,9 @@ export async function POST() {
           continue;
         }
         const receiptId = row.id;
-        console.log(`[sync] inv#${parsed.invNumber}: receiptId=${receiptId}, inserting ${parsed.items.length} item(s)`);
+        console.log(
+          `[sync] inv#${parsed.invNumber}: receiptId=${receiptId}, inserting ${parsed.items.length} item(s)`
+        );
 
         for (const item of parsed.items) {
           insertItem.run(
@@ -104,9 +108,6 @@ export async function POST() {
     return Response.json(summary);
   } catch (err) {
     console.error("Sync error:", err);
-    return Response.json(
-      { error: "sync_failed", message: String(err) },
-      { status: 500 }
-    );
+    return Response.json({ error: "sync_failed", message: String(err) }, { status: 500 });
   }
 }

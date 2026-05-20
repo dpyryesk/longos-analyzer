@@ -12,16 +12,12 @@ export async function GET(request: NextRequest) {
   }
 
   if (!code) {
-    return Response.redirect(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/?auth_error=no_code`
-    );
+    return Response.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/?auth_error=no_code`);
   }
 
   const client = getOAuthClient();
   const { tokens } = await client.getToken(code);
   saveTokens(tokens as Record<string, unknown>);
 
-  return Response.redirect(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/?auth_success=1`
-  );
+  return Response.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/?auth_success=1`);
 }

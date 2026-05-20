@@ -1,26 +1,40 @@
 @import "tailwindcss";
 
+/* Force light color-scheme so the browser never renders a dark system backdrop.
+   Must come before any other :root declarations so it wins specificity. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Explicit background + foreground on both html and body so there's never
+   a transparent/system-dark fallback, no matter what Tailwind base does. */
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fbf8f1; /* --paper-50 / --bg-page — warm cream */
+  color: #1b1f1a; /* --ink-900 / --fg-default — deep ink */
+}
+
+/* Once the design-token file is loaded (imported after this file in layout.tsx),
+   the CSS vars will resolve correctly and override the raw hex fallbacks above. */
+html {
+  background-color: var(--bg-page, #fbf8f1);
+  color: var(--fg-default, #1b1f1a);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus-visible ring using the brand focus token */
+:focus-visible {
+  outline: 2px solid var(--focus-ring, rgba(79, 107, 64, 0.5));
+  outline-offset: 2px;
+}
+
+/* Box-sizing reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }

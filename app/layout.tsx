@@ -8,11 +8,7 @@ export const metadata: Metadata = {
   description: "Analyze your Longo's grocery spending trends",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       {/*
@@ -28,9 +24,7 @@ export default function RootLayout({
         style={{ fontFamily: "var(--font-sans)" }}
       >
         <NavBar />
-        <main className="max-w-[1240px] mx-auto px-6 md:px-10 py-8">
-          {children}
-        </main>
+        <main className="mx-auto max-w-[1240px] px-6 py-8 md:px-10">{children}</main>
       </body>
     </html>
   );

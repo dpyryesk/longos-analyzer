@@ -15,23 +15,78 @@ import {
   CartesianGrid,
 } from "recharts";
 
+// Design-token chart palette (ordered) — hex values required for Recharts SVG attrs
+const CHART_COLORS = [
+  "#4F6B40", // --chart-1  sage-500
+  "#A8623A", // --chart-2  clay-500
+  "#D4A23A", // --chart-3  amber-500
+  "#5E8593", // --chart-4  sky-500
+  "#84526B", // --chart-5  plum-500
+  "#8FA67F", // --chart-6  sage-300
+  "#D29A6A", // --chart-7  clay-300
+];
+
+const C = {
+  ink100: "#E4E2D7",
+  ink400: "#7A7F76",
+  ink500: "#5A615A",
+  paper50: "#FBF8F1",
+  sage500: "#4F6B40",
+};
+
 interface CategoryRow {
   category: string;
   total: number;
   count: number;
   avg_price: number;
 }
+
 interface TrendRow {
   period: string;
   category: string;
   total: number;
 }
 
-const COLORS = [
-  "#15803d", "#16a34a", "#4ade80", "#86efac",
-  "#bbf7d0", "#6b7280", "#f59e0b", "#ef4444",
-  "#3b82f6", "#8b5cf6",
-];
+function CustomTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: { name: string; value: number; fill: string }[];
+}) {
+  if (!active || !payload?.length) return null;
+  const p = payload[0];
+  return (
+    <div
+      style={{
+        background: C.paper50,
+        border: `1px solid ${C.ink100}`,
+        borderRadius: 8,
+        padding: "10px 14px",
+        boxShadow: "0 2px 8px rgba(27,31,26,0.08)",
+        fontFamily: "var(--font-sans)",
+      }}
+    >
+      <p
+        style={{
+          fontSize: 11,
+          color: C.ink400,
+          marginBottom: 4,
+          fontWeight: 600,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+        }}
+      >
+        {p.name}
+      </p>
+      <p
+        style={{ fontSize: 13, color: p.fill, fontWeight: 600, fontVariantNumeric: "tabular-nums" }}
+      >
+        ${(p.value as number).toFixed(2)}
+      </p>
+    </div>
+  );
+}
 
 export default function CategoryCharts() {
   const [categories, setCategories] = useState<CategoryRow[]>([]);
@@ -62,20 +117,71 @@ export default function CategoryCharts() {
     return row;
   });
 
+  const emptyState = (
+    <div
+      style={{
+        height: 280,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: C.ink400,
+        fontFamily: "var(--font-sans)",
+        fontSize: "var(--fs-body-sm)",
+      }}
+    >
+      {loading ? "Loading…" : "No data yet."}
+    </div>
+  );
+
   return (
-    <div className="bg-white rounded-xl shadow p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold text-gray-800">Category Breakdown</h2>
-        <div className="flex gap-2">
+    <div
+      style={{
+        background: "var(--bg-surface)",
+        border: "1px solid var(--border-subtle)",
+        borderRadius: "var(--r-xl)",
+        boxShadow: "var(--shadow-sm)",
+        padding: "24px",
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 20,
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "var(--fs-h2)",
+            fontWeight: 600,
+            lineHeight: "var(--lh-h2)",
+            letterSpacing: "var(--tracking-h2)",
+            color: "var(--fg-default)",
+            margin: 0,
+          }}
+        >
+          Category Breakdown
+        </h2>
+        <div style={{ display: "flex", gap: 6 }}>
           {(["pie", "trends"] as const).map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`text-xs px-3 py-1 rounded-full border transition-colors ${
-                view === v
-                  ? "bg-green-700 text-white border-green-700"
-                  : "border-gray-300 text-gray-600 hover:bg-gray-50"
-              }`}
+              style={{
+                fontSize: "var(--fs-caption)",
+                fontFamily: "var(--font-sans)",
+                fontWeight: 500,
+                padding: "4px 12px",
+                borderRadius: "var(--r-pill)",
+                border: `1px solid ${view === v ? C.sage500 : C.ink100}`,
+                background: view === v ? C.sage500 : "transparent",
+                color: view === v ? "#FBF8F1" : C.ink500,
+                cursor: "pointer",
+                transition: "all 120ms ease-out",
+              }}
             >
               {v === "pie" ? "Pie Chart" : "Trends"}
             </button>
@@ -83,16 +189,10 @@ export default function CategoryCharts() {
         </div>
       </div>
 
-      {loading ? (
-        <div className="h-64 flex items-center justify-center text-gray-400 text-sm">
-          Loading…
-        </div>
-      ) : categories.length === 0 ? (
-        <div className="h-64 flex items-center justify-center text-gray-400 text-sm">
-          No data yet.
-        </div>
+      {loading || categories.length === 0 ? (
+        emptyState
       ) : view === "pie" ? (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={280}>
           <PieChart>
             <Pie
               data={categories}
@@ -101,35 +201,50 @@ export default function CategoryCharts() {
               cx="50%"
               cy="50%"
               outerRadius={110}
+              innerRadius={44}
+              paddingAngle={2}
               label={({ name, percent }: { name?: string; percent?: number }) =>
                 `${name ?? ""} ${((percent ?? 0) * 100).toFixed(0)}%`
               }
               labelLine={false}
             >
               {categories.map((_, i) => (
-                <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} stroke="none" />
               ))}
             </Pie>
-            <Tooltip formatter={(v: unknown) => `$${(v as number).toFixed(2)}`} />
+            <Tooltip content={<CustomTooltip />} />
           </PieChart>
         </ResponsiveContainer>
       ) : (
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={areaData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis dataKey="period" tick={{ fontSize: 10 }} />
-            <YAxis tick={{ fontSize: 11 }} tickFormatter={(v: unknown) => `$${v as number}`} />
-            <Tooltip formatter={(v: unknown) => `$${(v as number).toFixed(2)}`} />
+        <ResponsiveContainer width="100%" height={280}>
+          <AreaChart data={areaData} margin={{ top: 5, right: 8, bottom: 5, left: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke={C.ink100} vertical={false} />
+            <XAxis
+              dataKey="period"
+              tick={{ fontSize: 11, fill: C.ink400, fontFamily: "var(--font-sans)" }}
+              axisLine={{ stroke: C.ink100 }}
+              tickLine={false}
+            />
+            <YAxis
+              tick={{ fontSize: 11, fill: C.ink400, fontFamily: "var(--font-mono)" }}
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(v: unknown) => `$${v as number}`}
+              width={48}
+            />
+            {/*<Tooltip content={<CustomTooltip/>}/>*/}
             <Legend />
+            <Tooltip formatter={(v: unknown) => `$${(v as number).toFixed(2)}`} />
             {categoryNames.map((cat, i) => (
               <Area
                 key={cat}
                 type="monotone"
                 dataKey={cat}
                 stackId="1"
-                stroke={COLORS[i % COLORS.length]}
-                fill={COLORS[i % COLORS.length]}
-                fillOpacity={0.7}
+                stroke={CHART_COLORS[i % CHART_COLORS.length]}
+                fill={CHART_COLORS[i % CHART_COLORS.length]}
+                fillOpacity={0.65}
+                strokeWidth={1.5}
               />
             ))}
           </AreaChart>

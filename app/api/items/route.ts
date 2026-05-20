@@ -3,12 +3,7 @@ export const dynamic = "force-dynamic";
 import type { NextRequest } from "next/server";
 import { getDb } from "@/lib/db";
 
-const VALID_SORT = new Set([
-  "total_spent",
-  "count",
-  "avg_price",
-  "name",
-]);
+const VALID_SORT = new Set(["total_spent", "count", "avg_price", "name"]);
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
@@ -63,9 +58,9 @@ export async function GET(request: NextRequest) {
 
   // Also return distinct categories for filter dropdown
   const categories = (
-    db
-      .prepare(`SELECT DISTINCT category FROM items ORDER BY category ASC`)
-      .all() as { category: string }[]
+    db.prepare(`SELECT DISTINCT category FROM items ORDER BY category ASC`).all() as {
+      category: string;
+    }[]
   ).map((r) => r.category);
 
   return Response.json({ items: rows, categories });

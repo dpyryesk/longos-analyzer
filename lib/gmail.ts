@@ -14,8 +14,7 @@ export async function fetchReceiptEmails(
   maxResults = 10_000
 ): Promise<EmailMessage[]> {
   const gmail = google.gmail({ version: "v1", auth });
-  const query =
-    process.env.GMAIL_SEARCH_QUERY ?? "from:donotreply@longos.com";
+  const query = process.env.GMAIL_SEARCH_QUERY ?? "from:donotreply@longos.com";
 
   const fullQuery = `${query}`;
 
@@ -42,7 +41,10 @@ export async function fetchReceiptEmails(
     );
 
     for (const msg of messages) {
-      if (!msg.id) { console.log("[gmail] skipping message with no id"); continue; }
+      if (!msg.id) {
+        console.log("[gmail] skipping message with no id");
+        continue;
+      }
       const detail = await gmail.users.messages.get({
         userId: "me",
         id: msg.id,
@@ -57,7 +59,7 @@ export async function fetchReceiptEmails(
         results.push({ messageId: msg.id, plainText });
       } else {
         console.log(
-          `[gmail] message ${msg.id}: NO extractable text — mimeType=${detail.data?.payload?.mimeType ?? "unknown"}, parts=${JSON.stringify((detail.data?.payload?.parts ?? []).map(p => p.mimeType))}`
+          `[gmail] message ${msg.id}: NO extractable text — mimeType=${detail.data?.payload?.mimeType ?? "unknown"}, parts=${JSON.stringify((detail.data?.payload?.parts ?? []).map((p) => p.mimeType))}`
         );
       }
 
@@ -92,7 +94,9 @@ function extractPlainText(message: { payload?: MimePart | null }): string | null
 
   const html = findPartData(message.payload, "text/html");
   if (html) {
-    console.log("[gmail] extractPlainText: no text/plain — falling back to text/html and stripping tags");
+    console.log(
+      "[gmail] extractPlainText: no text/plain — falling back to text/html and stripping tags"
+    );
     return htmlToText(html);
   }
 
@@ -120,26 +124,28 @@ function findPartData(part: MimePart, mimeType: string): string | null {
  * - Decodes common HTML entities
  */
 function htmlToText(html: string): string {
-  return html
-    // Remove style and script blocks entirely
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
-    // Block elements → newline
-    .replace(/<\/(p|div|tr|li|h[1-6])>/gi, "\n")
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<td[^>]*>/gi, " ")
-    // Strip all remaining tags
-    .replace(/<[^>]+>/g, "")
-    // Decode common HTML entities
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    // Collapse excessive blank lines
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  return (
+    html
+      // Remove style and script blocks entirely
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+      // Block elements → newline
+      .replace(/<\/(p|div|tr|li|h[1-6])>/gi, "\n")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<td[^>]*>/gi, " ")
+      // Strip all remaining tags
+      .replace(/<[^>]+>/g, "")
+      // Decode common HTML entities
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      // Collapse excessive blank lines
+      .replace(/\n{3,}/g, "\n\n")
+      .trim()
+  );
 }
 
 function decodeBase64(encoded: string): string {

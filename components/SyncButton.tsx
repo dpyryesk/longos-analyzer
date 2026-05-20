@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { RefreshCw, KeyRound, CheckCircle, AlertCircle } from "lucide-react";
 
 interface SyncResult {
   added: number;
@@ -9,11 +10,7 @@ interface SyncResult {
   total: number;
 }
 
-export default function SyncButton({
-  isAuthenticated,
-}: {
-  isAuthenticated: boolean;
-}) {
+export default function SyncButton({ isAuthenticated }: { isAuthenticated: boolean }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<SyncResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +39,6 @@ export default function SyncButton({
       }
 
       setResult(data as SyncResult);
-      // Refresh the page data
       window.location.reload();
     } catch (e) {
       setError(String(e));
@@ -52,25 +48,79 @@ export default function SyncButton({
   }
 
   return (
-    <div className="flex flex-col gap-2 items-end">
+    <div className="flex flex-col items-end gap-2">
       <button
         onClick={handleSync}
         disabled={loading}
-        className="bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white font-medium px-5 py-2 rounded-lg transition-colors text-sm"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "6px",
+          fontFamily: "var(--font-sans)",
+          fontSize: "var(--fs-body-sm)",
+          fontWeight: 500,
+          color: "var(--fg-on-brand)",
+          background: loading ? "var(--brand-hover)" : "var(--brand)",
+          border: "none",
+          borderRadius: "var(--r-sm)",
+          padding: "8px 16px",
+          cursor: loading ? "wait" : "pointer",
+          opacity: loading ? 0.75 : 1,
+          boxShadow: "var(--shadow-xs)",
+          transition: `background var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out)`,
+          whiteSpace: "nowrap",
+        }}
+        onMouseEnter={(e) => {
+          if (!loading) {
+            (e.currentTarget as HTMLButtonElement).style.background = "var(--brand-hover)";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-sm)";
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!loading) {
+            (e.currentTarget as HTMLButtonElement).style.background = "var(--brand)";
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-xs)";
+          }
+        }}
       >
-        {loading
-          ? "Syncing…"
-          : isAuthenticated
-          ? "🔄 Sync Receipts"
-          : "🔑 Connect Gmail"}
+        {loading ? (
+          <RefreshCw size={14} strokeWidth={2} className="animate-spin" />
+        ) : isAuthenticated ? (
+          <RefreshCw size={14} strokeWidth={2} />
+        ) : (
+          <KeyRound size={14} strokeWidth={2} />
+        )}
+        {loading ? "Syncing…" : isAuthenticated ? "Sync Receipts" : "Connect Gmail"}
       </button>
+
       {result && (
-        <p className="text-xs text-gray-600">
-          ✅ Added {result.added} | Skipped {result.skipped} | Failed{" "}
-          {result.failed}
+        <p
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "5px",
+            fontSize: "var(--fs-caption)",
+            color: "var(--success-700)",
+          }}
+        >
+          <CheckCircle size={12} strokeWidth={2} />
+          Added {result.added} · Skipped {result.skipped} · Failed {result.failed}
         </p>
       )}
-      {error && <p className="text-xs text-red-600">❌ {error}</p>}
+      {error && (
+        <p
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "5px",
+            fontSize: "var(--fs-caption)",
+            color: "var(--danger-500)",
+          }}
+        >
+          <AlertCircle size={12} strokeWidth={2} />
+          {error}
+        </p>
+      )}
     </div>
   );
 }

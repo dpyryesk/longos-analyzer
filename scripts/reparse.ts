@@ -45,7 +45,7 @@ console.log("Done.\n");
 // ── Step 2: load all receipts ───────────────────────────────────────────────
 const receipts = db
   .prepare("SELECT id, inv_number, raw_text FROM receipts ORDER BY id")
-  .all() as ReceiptRow[];
+  .all() as unknown as ReceiptRow[];
 
 console.log(`Found ${receipts.length} receipt(s) to re-parse.\n`);
 
@@ -104,9 +104,7 @@ try {
       const lineList = parsed.unmatchedLines
         .map((l, i) => `  ${i + 1}. ${JSON.stringify(l)}`)
         .join("\n");
-      failedSections.push(
-        `=== ${label} — unmatched item lines ===\n${lineList}\n`
-      );
+      failedSections.push(`=== ${label} — unmatched item lines ===\n${lineList}\n`);
       withWarnings++;
     }
 
@@ -134,5 +132,5 @@ if (failedSections.length > 0) {
 
 console.log(
   `\nSummary: ${succeeded} succeeded (${withWarnings} with unmatched lines),` +
-  ` ${failed} failed, ${receipts.length} total.`
+    ` ${failed} failed, ${receipts.length} total.`
 );

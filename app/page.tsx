@@ -6,15 +6,7 @@ import SyncButton from "@/components/SyncButton";
 import SpendingLineChart from "@/components/SpendingLineChart";
 import CategoryCharts from "@/components/CategoryCharts";
 import Link from "next/link";
-import {
-  Wallet,
-  Receipt,
-  ShoppingCart,
-  Award,
-  Package,
-  Tag,
-  type LucideIcon,
-} from "lucide-react";
+import { Wallet, Receipt, ShoppingCart, Award, Package, Tag, type LucideIcon } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Data fetch (unchanged from your original)
@@ -23,29 +15,23 @@ function getDashboardStats() {
   const db = getDb();
 
   const totalSpent = (
-    db
-      .prepare(`SELECT COALESCE(SUM(total_amount), 0) as v FROM receipts`)
-      .get() as { v: number }
+    db.prepare(`SELECT COALESCE(SUM(total_amount), 0) as v FROM receipts`).get() as { v: number }
   ).v;
 
-  const receiptCount = (
-    db.prepare(`SELECT COUNT(*) as v FROM receipts`).get() as { v: number }
-  ).v;
+  const receiptCount = (db.prepare(`SELECT COUNT(*) as v FROM receipts`).get() as { v: number }).v;
 
   const avgPerTrip = receiptCount > 0 ? totalSpent / receiptCount : 0;
 
   const topCategory = db
     .prepare(
-      `SELECT category, SUM(amount) as total FROM items GROUP BY category ORDER BY total DESC LIMIT 1`,
+      `SELECT category, SUM(amount) as total FROM items GROUP BY category ORDER BY total DESC LIMIT 1`
     )
     .get() as { category: string; total: number } | undefined;
 
   const totalSavings = (
-    db
-      .prepare(
-        `SELECT COALESCE(SUM(amount), 0) as v FROM items WHERE on_sale = 1`,
-      )
-      .get() as { v: number }
+    db.prepare(`SELECT COALESCE(SUM(amount), 0) as v FROM items WHERE on_sale = 1`).get() as {
+      v: number;
+    }
   ).v;
 
   const uniqueItems = (
@@ -57,7 +43,7 @@ function getDashboardStats() {
   const topItems = db
     .prepare(
       `SELECT name, category, SUM(amount) as total_spent, COUNT(*) as count
-       FROM items GROUP BY name, category ORDER BY total_spent DESC LIMIT 10`,
+       FROM items GROUP BY name, category ORDER BY total_spent DESC LIMIT 10`
     )
     .all() as {
     name: string;
@@ -69,7 +55,7 @@ function getDashboardStats() {
   const dayOfWeek = db
     .prepare(
       `SELECT strftime('%w', timestamp) as dow, COUNT(*) as cnt, SUM(total_amount) as total
-       FROM receipts GROUP BY dow ORDER BY dow ASC`,
+       FROM receipts GROUP BY dow ORDER BY dow ASC`
     )
     .all() as { dow: string; cnt: number; total: number }[];
 
@@ -88,9 +74,7 @@ function getDashboardStats() {
 // ---------------------------------------------------------------------------
 // Formatters — tabular, grouped, two decimals. Per the design system.
 // ---------------------------------------------------------------------------
-const currency = (n: number) =>
-  "$" +
-  n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const currency = (n: number) => "$" + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -108,7 +92,7 @@ function Surface({
 }) {
   return (
     <div
-      className={`bg-white border border-[var(--border-subtle)] rounded-2xl shadow-[var(--shadow-sm)] ${
+      className={`rounded-2xl border border-[var(--border-subtle)] bg-white shadow-[var(--shadow-sm)] ${
         padded ? "p-6" : ""
       } ${className}`}
     >
@@ -119,7 +103,7 @@ function Surface({
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--fg-muted)]">
+    <div className="text-[11px] font-semibold tracking-[0.12em] text-[var(--fg-muted)] uppercase">
       {children}
     </div>
   );
@@ -137,22 +121,20 @@ function KpiCard({
   sub?: string;
 }) {
   return (
-    <Surface className="flex flex-col gap-2">
+    <Surface className="flex min-w-0 flex-col gap-2">
       <div className="flex items-center justify-between">
         <Eyebrow>{label}</Eyebrow>
-        <span className="text-[var(--fg-muted)]">
-          <Icon size={18} strokeWidth={1.75} />
+        <span className="shrink-0 text-[var(--fg-muted)]">
+          <Icon size={16} strokeWidth={1.75} />
         </span>
       </div>
       <div
-        className="text-[34px] leading-[1.06] tracking-[-0.02em] font-bold tabular-nums text-[var(--fg-default)]"
+        className="truncate text-[24px] leading-[1.1] font-bold tracking-[-0.015em] text-[var(--fg-default)] tabular-nums"
         style={{ fontFamily: "var(--font-display)" }}
       >
         {value}
       </div>
-      {sub && (
-        <div className="text-xs text-[var(--fg-muted)]">{sub}</div>
-      )}
+      {sub && <div className="truncate text-xs text-[var(--fg-muted)]">{sub}</div>}
     </Surface>
   );
 }
@@ -215,12 +197,12 @@ export default function DashboardPage({
       <div className="flex items-start justify-between gap-6">
         <div>
           <h1
-            className="text-[32px] leading-tight tracking-[-0.02em] font-bold text-[var(--fg-default)]"
+            className="text-[32px] leading-tight font-bold tracking-[-0.02em] text-[var(--fg-default)]"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Dashboard
           </h1>
-          <p className="text-sm text-[var(--fg-muted)] mt-1">
+          <p className="mt-1 text-sm text-[var(--fg-muted)]">
             Your Longo&apos;s grocery spending at a glance
           </p>
         </div>
@@ -228,15 +210,17 @@ export default function DashboardPage({
       </div>
 
       {/* KPI grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {kpiCards.map((c) => (
           <KpiCard key={c.label} {...c} />
         ))}
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1">
         <SpendingLineChart />
+      </div>
+      <div className="grid grid-cols-1">
         <CategoryCharts />
       </div>
 
@@ -244,7 +228,7 @@ export default function DashboardPage({
       {stats.dayOfWeek.length > 0 && (
         <Surface>
           <h2
-            className="text-[22px] leading-snug tracking-[-0.01em] font-semibold text-[var(--fg-default)] mb-5"
+            className="mb-5 text-[22px] leading-snug font-semibold tracking-[-0.01em] text-[var(--fg-default)]"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Trips by day of week
@@ -256,16 +240,16 @@ export default function DashboardPage({
               const pct = d ? (d.cnt / maxCnt) * 100 : 0;
               return (
                 <div key={dow} className="flex flex-col items-center gap-2">
-                  <div className="w-full bg-[var(--paper-100)] rounded-lg overflow-hidden h-24 flex items-end">
+                  <div className="flex h-24 w-full items-end overflow-hidden rounded-lg bg-[var(--paper-100)]">
                     <div
-                      className="w-full bg-[var(--sage-500)] rounded-b-lg transition-all duration-300 ease-out"
+                      className="w-full rounded-b-lg bg-[var(--sage-500)] transition-all duration-300 ease-out"
                       style={{ height: `${pct}%` }}
                     />
                   </div>
                   <span className="text-xs font-medium text-[var(--fg-default)]">
                     {DAY_NAMES[dow]}
                   </span>
-                  <span className="text-[11px] font-mono tabular-nums text-[var(--fg-muted)]">
+                  <span className="font-mono text-[11px] text-[var(--fg-muted)] tabular-nums">
                     {d?.cnt ?? 0}
                   </span>
                 </div>
@@ -278,35 +262,33 @@ export default function DashboardPage({
       {/* Top 10 items */}
       {stats.topItems.length > 0 && (
         <Surface padded={false}>
-          <div className="px-6 py-5 border-b border-[var(--border-subtle)] flex items-baseline justify-between">
+          <div className="flex items-baseline justify-between border-b border-[var(--border-subtle)] px-6 py-5">
             <h2
-              className="text-[22px] leading-snug tracking-[-0.01em] font-semibold text-[var(--fg-default)]"
+              className="text-[22px] leading-snug font-semibold tracking-[-0.01em] text-[var(--fg-default)]"
               style={{ fontFamily: "var(--font-display)" }}
             >
               Top 10 most-spent items
             </h2>
-            <span className="text-xs text-[var(--fg-muted)]">
-              All time · by total
-            </span>
+            <span className="text-xs text-[var(--fg-muted)]">All time · by total</span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-[var(--fg-muted)]">
-                  <th className="px-6 py-3 font-semibold text-[11px] uppercase tracking-[0.1em] w-12">
+                  <th className="w-12 px-6 py-3 text-[11px] font-semibold tracking-[0.1em] uppercase">
                     #
                   </th>
-                  <th className="py-3 pr-4 font-semibold text-[11px] uppercase tracking-[0.1em]">
+                  <th className="py-3 pr-4 text-[11px] font-semibold tracking-[0.1em] uppercase">
                     Item
                   </th>
-                  <th className="py-3 pr-4 font-semibold text-[11px] uppercase tracking-[0.1em]">
+                  <th className="py-3 pr-4 text-[11px] font-semibold tracking-[0.1em] uppercase">
                     Category
                   </th>
-                  <th className="py-3 pr-4 font-semibold text-[11px] uppercase tracking-[0.1em] text-right">
+                  <th className="py-3 pr-4 text-right text-[11px] font-semibold tracking-[0.1em] uppercase">
                     Times
                   </th>
-                  <th className="py-3 pr-6 font-semibold text-[11px] uppercase tracking-[0.1em] text-right">
+                  <th className="py-3 pr-6 text-right text-[11px] font-semibold tracking-[0.1em] uppercase">
                     Total spent
                   </th>
                 </tr>
@@ -315,28 +297,28 @@ export default function DashboardPage({
                 {stats.topItems.map((item, i) => (
                   <tr
                     key={item.name}
-                    className="border-t border-[var(--border-subtle)] hover:bg-[var(--paper-100)] transition-colors"
+                    className="border-t border-[var(--border-subtle)] transition-colors hover:bg-[var(--paper-100)]"
                   >
-                    <td className="px-6 py-3.5 font-mono tabular-nums text-[var(--fg-subtle)]">
+                    <td className="px-6 py-3.5 font-mono text-[var(--fg-subtle)] tabular-nums">
                       {String(i + 1).padStart(2, "0")}
                     </td>
                     <td className="py-3.5 pr-4">
                       <Link
                         href={`/items/${encodeURIComponent(item.name)}`}
-                        className="font-medium text-[var(--fg-default)] hover:text-[var(--sage-600)] hover:underline underline-offset-2"
+                        className="font-medium text-[var(--fg-default)] underline-offset-2 hover:text-[var(--sage-600)] hover:underline"
                       >
                         {item.name}
                       </Link>
                     </td>
                     <td className="py-3.5 pr-4">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-lg bg-[var(--paper-100)] text-[var(--ink-700)]">
+                      <span className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--paper-100)] px-2.5 py-1 text-xs font-medium text-[var(--ink-700)]">
                         {item.category}
                       </span>
                     </td>
-                    <td className="py-3.5 pr-4 text-right font-mono tabular-nums text-[var(--fg-muted)]">
+                    <td className="py-3.5 pr-4 text-right font-mono text-[var(--fg-muted)] tabular-nums">
                       {item.count}×
                     </td>
-                    <td className="py-3.5 pr-6 text-right font-mono tabular-nums font-semibold text-[var(--fg-default)]">
+                    <td className="py-3.5 pr-6 text-right font-mono font-semibold text-[var(--fg-default)] tabular-nums">
                       {currency(item.total_spent)}
                     </td>
                   </tr>

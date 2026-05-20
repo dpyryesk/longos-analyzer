@@ -8,17 +8,12 @@ export async function GET() {
   const db = getDb();
 
   const totalSpent = (
-    db
-      .prepare(`SELECT COALESCE(SUM(total_amount), 0) as v FROM receipts`)
-      .get() as { v: number }
+    db.prepare(`SELECT COALESCE(SUM(total_amount), 0) as v FROM receipts`).get() as { v: number }
   ).v;
 
-  const receiptCount = (
-    db.prepare(`SELECT COUNT(*) as v FROM receipts`).get() as { v: number }
-  ).v;
+  const receiptCount = (db.prepare(`SELECT COUNT(*) as v FROM receipts`).get() as { v: number }).v;
 
-  const avgPerTrip =
-    receiptCount > 0 ? Math.round((totalSpent / receiptCount) * 100) / 100 : 0;
+  const avgPerTrip = receiptCount > 0 ? Math.round((totalSpent / receiptCount) * 100) / 100 : 0;
 
   const topCategory = db
     .prepare(
@@ -31,17 +26,13 @@ export async function GET() {
     .get() as { category: string; total: number } | undefined;
 
   const totalSavings = (
-    db
-      .prepare(
-        `SELECT COALESCE(SUM(amount), 0) as v FROM items WHERE on_sale = 1`
-      )
-      .get() as { v: number }
+    db.prepare(`SELECT COALESCE(SUM(amount), 0) as v FROM items WHERE on_sale = 1`).get() as {
+      v: number;
+    }
   ).v;
 
   const uniqueItems = (
-    db
-      .prepare(`SELECT COUNT(DISTINCT name) as v FROM items`)
-      .get() as { v: number }
+    db.prepare(`SELECT COUNT(DISTINCT name) as v FROM items`).get() as { v: number }
   ).v;
 
   const dayOfWeek = db
@@ -54,15 +45,7 @@ export async function GET() {
     )
     .get() as { dow: string; cnt: number } | undefined;
 
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const favDay = dayOfWeek ? days[parseInt(dayOfWeek.dow)] : null;
 
   return Response.json({

@@ -27,7 +27,8 @@ const CATEGORY_RE = /^ ([A-Z][A-Z ]+)$/;
 // digits, spaces, apostrophes, dots, ampersands, slashes, hyphens, commas,
 // percent, plus, equals, double-quotes (inch marks), dollar signs (gift cards),
 // square brackets (e.g. "RICE STICK [5MM]").
-const ITEM_RE = /^ ?([A-Z0-9\u00C0-\u00FF][A-Z0-9\u00C0-\u00FF '.&/\-,%+"$=\[\]]{1,}?)\s{2,}\$(\d+\.\d{2})(.*)$/;
+const ITEM_RE =
+  /^ ?([A-Z0-9\u00C0-\u00FF][A-Z0-9\u00C0-\u00FF '.&/\-,%+"$=\[\]]{1,}?)\s{2,}\$(\d+\.\d{2})(.*)$/;
 
 // Timestamp on header line: "#035-004 11/18/2025 18:43:46"
 const TIMESTAMP_RE = /#\d{3}-\d{3}\s+(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}:\d{2}:\d{2})/;
@@ -64,8 +65,7 @@ const UNIT_PRICE_RE = /^\s*\d+\s*@\s*\$(\d+\.\d{2})\s+each/i;
 //   "CPN: 25% OFF BBQ CHICKEN  H"  — coupon description
 //   "CPN: BONUS POINTS"            — coupon description
 //   "PLASTIC BAG"                  — non-priced annotation line
-const KNOWN_SKIP_RE =
-  /Member Savings:|Bonus points:|^\s*CPN:|-\$|^PLASTIC BAG/i;
+const KNOWN_SKIP_RE = /Member Savings:|Bonus points:|^\s*CPN:|-\$|^PLASTIC BAG/i;
 
 export function parseReceipt(rawText: string): ParsedReceipt | null {
   const lines = rawText.split(/\r?\n/);
@@ -74,10 +74,16 @@ export function parseReceipt(rawText: string): ParsedReceipt | null {
   let invNumber: string | null = null;
   for (const line of lines) {
     const m = INV_RE.exec(line);
-    if (m) { invNumber = m[1]; break; }
+    if (m) {
+      invNumber = m[1];
+      break;
+    }
   }
   if (!invNumber) {
-    console.log("[parser] SKIP: no invoice number found in text (first 200 chars):", rawText.slice(0, 200));
+    console.log(
+      "[parser] SKIP: no invoice number found in text (first 200 chars):",
+      rawText.slice(0, 200)
+    );
     return null;
   }
 
@@ -102,7 +108,10 @@ export function parseReceipt(rawText: string): ParsedReceipt | null {
   let totalAmount: number | null = null;
   for (const line of lines) {
     const m = AMOUNT_CC_RE.exec(line);
-    if (m) { totalAmount = parseFloat(m[1]); break; }
+    if (m) {
+      totalAmount = parseFloat(m[1]);
+      break;
+    }
   }
   if (totalAmount === null) {
     const m = TOTAL_BODY_RE.exec(rawText);
