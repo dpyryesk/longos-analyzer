@@ -1,0 +1,217 @@
+/* =========================================================
+   Longo's Analyzer — Foundation tokens
+   Natural, muted, bold. Grocery-warmth meets data tooling.
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
+
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype-variations"),
+    url("../fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
+    font-weight: 200 800;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../fonts/PlusJakartaSans-Italic-VariableFont_wght.ttf") format("truetype-variations"),
+    url("../fonts/PlusJakartaSans-Italic-VariableFont_wght.ttf") format("truetype");
+    font-weight: 200 800;
+    font-style: italic;
+    font-display: swap;
+}
+
+:root {
+    /* ---------- TYPE FAMILIES ---------- */
+    --font-display: "Plus Jakarta Sans", "Söhne Breit", system-ui, sans-serif;
+    --font-sans:    "Geist", "Inter", system-ui, -apple-system, sans-serif;
+    --font-mono:    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* ---------- TYPE SCALE (modular, 1.250 major-third on display) ---------- */
+    --fs-display-2xl: 72px;  --lh-display-2xl: 1.02;  --tracking-display-2xl: -0.035em;
+    --fs-display-xl:  56px;  --lh-display-xl:  1.04;  --tracking-display-xl:  -0.03em;
+    --fs-display-lg:  44px;  --lh-display-lg:  1.06;  --tracking-display-lg:  -0.025em;
+    --fs-display-md:  34px;  --lh-display-md:  1.10;  --tracking-display-md:  -0.02em;
+    --fs-h1:          28px;  --lh-h1:          1.18;  --tracking-h1:          -0.015em;
+    --fs-h2:          22px;  --lh-h2:          1.25;  --tracking-h2:          -0.01em;
+    --fs-h3:          18px;  --lh-h3:          1.32;  --tracking-h3:          -0.005em;
+    --fs-body-lg:     17px;  --lh-body-lg:     1.55;
+    --fs-body:        15px;  --lh-body:        1.55;
+    --fs-body-sm:     13px;  --lh-body-sm:     1.5;
+    --fs-caption:     12px;  --lh-caption:     1.4;  --tracking-caption: 0.01em;
+    --fs-overline:    11px;  --lh-overline:    1.3;  --tracking-overline: 0.12em;
+
+    /* ---------- COLOR — RAW PALETTE ---------- */
+    /* Paper & ink */
+    --paper-50:  #FBF8F1; /* lightest cream — page bg */
+    --paper-100: #F5F0E6; /* warm bg */
+    --paper-200: #EDE6D7;
+    --paper-300: #DED4BF;
+    --ink-900:   #1B1F1A; /* deep, slightly green-black */
+    --ink-700:   #2F3530;
+    --ink-500:   #5A615A;
+    --ink-400:   #7A7F76;
+    --ink-300:   #A6A89E;
+    --ink-200:   #C9C9BE;
+    --ink-100:   #E4E2D7;
+
+    /* Sage — primary brand (muted grocery green) */
+    --sage-50:   #EEF2EB;
+    --sage-100:  #DDE5D5;
+    --sage-200:  #BCCBAE;
+    --sage-300:  #8FA67F;
+    --sage-400:  #6B8758;
+    --sage-500:  #4F6B40; /* PRIMARY */
+    --sage-600:  #3D5530;
+    --sage-700:  #2D4022;
+    --sage-800:  #1E2C16;
+
+    /* Clay — warm secondary (receipts, accents) */
+    --clay-50:   #F8EFE6;
+    --clay-100:  #F0DEC8;
+    --clay-200:  #E3BF98;
+    --clay-300:  #D29A6A;
+    --clay-400:  #C07A4A;
+    --clay-500:  #A8623A; /* secondary */
+    --clay-600:  #884B2A;
+    --clay-700:  #6A381D;
+
+    /* Amber — highlight / spend */
+    --amber-100: #FAEBC2;
+    --amber-300: #ECC668;
+    --amber-500: #D4A23A;
+
+    /* Plum — chart series */
+    --plum-300:  #B58AA0;
+    --plum-500:  #84526B;
+
+    /* Sky — chart series */
+    --sky-300:   #A8C2CC;
+    --sky-500:   #5E8593;
+
+    /* Semantic */
+    --success-50:  #E8F1E4;
+    --success-500: #4F8A3A;
+    --success-700: #305520;
+    --warn-50:     #FBF0D6;
+    --warn-500:    #C68A1E;
+    --warn-700:    #7E5610;
+    --danger-50:   #F6E2DC;
+    --danger-500:  #B5462E;
+    --danger-700:  #762A1B;
+    --info-50:     #E2ECEF;
+    --info-500:    #4A7682;
+    --info-700:    #2B4953;
+
+    /* ---------- SEMANTIC COLOR ROLES ---------- */
+    --bg-page:        var(--paper-50);
+    --bg-surface:     #FFFFFF;
+    --bg-surface-2:   var(--paper-100);
+    --bg-sunken:      var(--paper-200);
+    --bg-inverse:     var(--ink-900);
+
+    --fg-default:     var(--ink-900);
+    --fg-muted:       var(--ink-500);
+    --fg-subtle:      var(--ink-400);
+    --fg-disabled:    var(--ink-300);
+    --fg-on-brand:    #FBF8F1;
+    --fg-on-inverse:  var(--paper-100);
+
+    --brand:          var(--sage-500);
+    --brand-hover:    var(--sage-600);
+    --brand-press:    var(--sage-700);
+    --brand-soft:     var(--sage-50);
+
+    --accent:         var(--clay-500);
+    --accent-hover:   var(--clay-600);
+    --accent-soft:    var(--clay-50);
+
+    --border-subtle:  var(--ink-100);
+    --border-default: var(--ink-200);
+    --border-strong:  var(--ink-300);
+    --border-brand:   var(--sage-300);
+
+    --focus-ring:     color-mix(in oklch, var(--sage-500) 50%, transparent);
+
+    /* Chart palette (ordered) */
+    --chart-1: var(--sage-500);
+    --chart-2: var(--clay-500);
+    --chart-3: var(--amber-500);
+    --chart-4: var(--sky-500);
+    --chart-5: var(--plum-500);
+    --chart-6: var(--sage-300);
+    --chart-7: var(--clay-300);
+
+    /* ---------- SPACING (4px base) ---------- */
+    --s-0: 0;
+    --s-1: 4px;
+    --s-2: 8px;
+    --s-3: 12px;
+    --s-4: 16px;
+    --s-5: 20px;
+    --s-6: 24px;
+    --s-8: 32px;
+    --s-10: 40px;
+    --s-12: 48px;
+    --s-16: 64px;
+    --s-20: 80px;
+    --s-24: 96px;
+
+    /* ---------- RADII ---------- */
+    --r-xs: 4px;
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-xl: 20px;
+    --r-2xl: 28px;
+    --r-pill: 999px;
+
+    /* ---------- SHADOWS / ELEVATION ---------- */
+    /* Warm, low-opacity, ink-tinted */
+    --shadow-xs: 0 1px 0 0 rgba(27, 31, 26, 0.04), 0 1px 2px 0 rgba(27, 31, 26, 0.04);
+    --shadow-sm: 0 1px 2px 0 rgba(27, 31, 26, 0.05), 0 2px 6px -1px rgba(27, 31, 26, 0.06);
+    --shadow-md: 0 2px 4px -1px rgba(27, 31, 26, 0.06), 0 8px 18px -4px rgba(27, 31, 26, 0.08);
+    --shadow-lg: 0 8px 18px -6px rgba(27, 31, 26, 0.10), 0 22px 40px -12px rgba(27, 31, 26, 0.12);
+    --shadow-inset: inset 0 1px 0 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 0 rgba(27, 31, 26, 0.03);
+
+    /* ---------- MOTION ---------- */
+    --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur-fast:   120ms;
+    --dur-base:   180ms;
+    --dur-slow:   260ms;
+    --dur-page:   400ms;
+}
+
+/* =========================================================
+   SEMANTIC TYPE CLASSES
+   ========================================================= */
+.t-display-2xl { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-display-2xl); line-height: var(--lh-display-2xl); letter-spacing: var(--tracking-display-2xl); color: var(--fg-default); }
+.t-display-xl  { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-display-xl);  line-height: var(--lh-display-xl);  letter-spacing: var(--tracking-display-xl); color: var(--fg-default); }
+.t-display-lg  { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-display-lg);  line-height: var(--lh-display-lg);  letter-spacing: var(--tracking-display-lg); color: var(--fg-default); }
+.t-display-md  { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-display-md);  line-height: var(--lh-display-md);  letter-spacing: var(--tracking-display-md); color: var(--fg-default); }
+
+.t-h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h1); line-height: var(--lh-h1); letter-spacing: var(--tracking-h1); color: var(--fg-default); }
+.t-h2 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--tracking-h2); color: var(--fg-default); }
+.t-h3 { font-family: var(--font-sans);    font-weight: 600; font-size: var(--fs-h3); line-height: var(--lh-h3); letter-spacing: var(--tracking-h3); color: var(--fg-default); }
+
+.t-body-lg { font-family: var(--font-sans); font-weight: 400; font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); color: var(--fg-default); }
+.t-body    { font-family: var(--font-sans); font-weight: 400; font-size: var(--fs-body);    line-height: var(--lh-body);    color: var(--fg-default); }
+.t-body-sm { font-family: var(--font-sans); font-weight: 400; font-size: var(--fs-body-sm); line-height: var(--lh-body-sm); color: var(--fg-muted); }
+
+.t-label    { font-family: var(--font-sans); font-weight: 500; font-size: var(--fs-body-sm); line-height: 1.3; color: var(--fg-default); }
+.t-caption  { font-family: var(--font-sans); font-weight: 400; font-size: var(--fs-caption); line-height: var(--lh-caption); letter-spacing: var(--tracking-caption); color: var(--fg-muted); }
+.t-overline { font-family: var(--font-sans); font-weight: 600; font-size: var(--fs-overline); line-height: var(--lh-overline); letter-spacing: var(--tracking-overline); text-transform: uppercase; color: var(--fg-muted); }
+
+.t-mono     { font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+.t-numeric  { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "ss01" on; }
+
+/* Element resets when this file is the only stylesheet on a page */
+html { font-family: var(--font-sans); color: var(--fg-default); background: var(--bg-page); }
+body { margin: 0; font-size: var(--fs-body); line-height: var(--lh-body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h1); line-height: var(--lh-h1); letter-spacing: var(--tracking-h1); margin: 0; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--tracking-h2); margin: 0; }
+h3 { font-family: var(--font-sans); font-weight: 600; font-size: var(--fs-h3); line-height: var(--lh-h3); margin: 0; }
+code, kbd, samp { font-family: var(--font-mono); font-size: 0.92em; background: var(--bg-surface-2); padding: 1px 6px; border-radius: var(--r-xs); }

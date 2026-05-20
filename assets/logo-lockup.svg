@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 56" fill="none">
+  
+  <g transform="translate(2,0)">
+    <path d="M10 8 L40 8 L40 47 L36.7 43.7 L33.3 47 L30 43.7 L26.7 47 L23.3 43.7 L20 47 L16.7 43.7 L13.3 47 L10 43.7 Z" fill="#4F6B40" stroke="#4F6B40" stroke-width="2" stroke-linejoin="round"></path>
+    <path d="M14 13 L36 13 L36 42 L33.5 39.8 L31 42 L28.5 39.8 L26 42 L23.5 39.8 L21 42 L18.5 39.8 L16.5 42 L14 39.8 Z" fill="#FBF8F1"></path>
+    <path d="M17 29 L21 25 L26 27 L30 21 L33 23" stroke="#4F6B40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+    <circle cx="33" cy="23" r="1.6" fill="#A8623A"></circle>
+  </g>
+  
+  <text x="56" y="36" font-family="Bricolage Grotesque, system-ui, sans-serif" font-weight="700" font-size="24" letter-spacing="-0.02em" fill="#1B1F1A">Longo&#39;s<tspan dx="6" fill="#5A615A" font-weight="500">Analyzer</tspan></text>
+</svg>
